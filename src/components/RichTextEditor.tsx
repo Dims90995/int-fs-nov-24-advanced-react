@@ -5,6 +5,11 @@ type State = string;
 type Action = string;
 
 function reducer(state: State, action: Action): State {
+    // Handle backspace action
+    if (action === "BACKSPACE") {
+        return state.slice(0, -1);
+    }
+    // Append other characters
     return state + action;
 }
 
@@ -17,18 +22,41 @@ export function RichTextEditor() {
     );
 
     function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
-        // TODO:
-        //  * Handle uppercase letters
-        //  * Handle space
-        //  * Handle tab
-        //  * Handle return
-        //------------------------------
-        //  * Handle backspace
-        console.log(e.key);
-        
-        if (e.key >= "a" && e.key <= "z") {
+        const { key } = e;
+
+        // Handle backspace
+        if (key === "Backspace") {
             e.preventDefault();
-            dispatch(e.key);
+            dispatch("BACKSPACE");
+            return;
+        }
+
+        // Handle return (Enter)
+        if (key === "Enter") {
+            e.preventDefault();
+            dispatch("\n");
+            return;
+        }
+
+        // Handle tab
+        if (key === "Tab") {
+            e.preventDefault();
+            dispatch("\t");
+            return;
+        }
+
+        // Handle space
+        if (key === " ") {
+            e.preventDefault();
+            dispatch(" ");
+            return;
+        }
+
+        // Handle letters (uppercase and lowercase)
+        if (/^[a-zA-Z]$/.test(key)) {
+            e.preventDefault();
+            dispatch(key);
+            return;
         }
     }
 
